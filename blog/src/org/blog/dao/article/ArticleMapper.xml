@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.blog.dao.article.ArticleMapper">
+
+	<!-- 获取文章集合 -->
+	<select id="getArticleList" resultType="article" parameterType="article">
+		select * from article
+		<trim prefix="where" prefixOverrides="and | or">
+			<if test="title!=null">
+				and title like concat('%',#{title},'%')
+			</if>
+			<if test="createName!=null">
+				and createName=#{createName}
+			</if>
+		</trim>
+		limit #{startNum},#{pageSize}
+	</select>
+
+	<!-- 获取文章总数 -->
+	<select id="getArticleListCount" resultType="int" parameterType="article">
+		select count(*) from article
+		<trim prefix="where" prefixOverrides="and | or">
+			<if test="title!=null">
+				and title like concat('%',#{title},'%')
+			</if>
+			<if test="createName!=null">
+				and createName=#{createName}
+			</if>
+		</trim>
+	</select>
+
+	<!-- 获取单个文章 -->
+	<select id="getArticle" resultType="article" parameterType="article">
+		select * from article
+		<trim prefix="where" prefixOverrides="and | or">
+			and id=#{id}
+		</trim>
+	</select>
+
+	<!-- 修改的通用方法 -->
+	<update id="modifyArticle" parameterType="article">
+		update article
+		<set>
+			<if test="title != null">
+				title = #{title},
+			</if>
+			<if test="createName != null">
+				createName = #{createName},
+			</if>
+			<if test="commentCount != null">
+				commentCount = #{commentCount},
+			</if>
+			<if test="createDate != null">
+				createDate = #{createDate},
+			</if>
+			<if test="content != null">
+				content = #{content},
+			</if>
+			<if test="describe != null">
+				describe = #{describe},
+			</if>
+			<if test="picPath != null">
+				picPath = #{picPath},
+			</if>
+		</set>
+		where id = #{id}
+	</update>
+
+	<!-- 添加 -->
+	<insert id="addArticle" parameterType="article">
+		INSERT INTO
+		`blog`.`article`
+		(`title`,`createName`,`commentCount`,`createDate`,`content`,`describe`,`picPath`)
+		VALUES
+		(#{title},#{createName},#{commentCount},#{createDate},#{content},#{describe},#{picPath});
+	</insert>
+
+	<!-- 删除文章 -->
+	<delete id="delArticle" parameterType="article">
+		DELETE FROM
+		`blog`.`article` WHERE `id` = #{id};
+	</delete>
+</mapper>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.blog.dao.user.UserMapper">
+  
+  <!--登录-->
+  <select id="login" parameterType="String" resultType="user">
+      SELECT * FROM `user` WHERE `userName`=#{userName} and userPwd=#{userPwd}
+  </select>
+  <!--判断用户是否存在-->
+  <select id="loginCodeIsExit" parameterType="user" resultType="int">
+    SELECT COUNT(1) FROM `user` WHERE `userName`=#{userName}
+  </select>
+  <!--修改通用方法-->
+   <update id="modifyUser" parameterType="user" >
+    update user
+    <set >
+      <if test="userName != null" >
+        userName = #{userName},
+      </if>
+      <if test="userPwd != null" >
+        userPwd = #{userPwd},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone},
+      </if>
+      <if test="name != null" >
+        name = #{name},
+      </if>
+      <if test="roleId != null" >
+        roleId = #{roleId},
+      </if>
+      <if test="roleName != null" >
+        roleName = #{roleName},
+      </if>
+      <if test="visit != null" >
+        visit = #{visit}+1,
+      </if>
+      <if test="lastTime != null" >
+        lastTime = #{lastTime},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+    <!--获取总记录数-->
+    <select id="count" resultType="int">
+       SELECT COUNT(id) FROM `user`
+    </select>
+    <!--分页显示-->
+    <select id="getUserList" resultType="user" parameterType="user">
+       SELECT * FROM `user` LIMIT #{startNum}, #{pageSize};
+    </select>
+    <!--添加用户-->
+    <insert id="addUser" parameterType="user">
+    INSERT INTO `blog`.`user` (`userName`,`userPwd`,`phone`,`name`,`roleId`,`roleName`,`visit`,`lastTime`)
+     VALUES (#{userName},#{userPwd},#{phone},#{name},#{roleId},#{roleName}, #{visit},#{lastTime});
+    </insert>
+    <!--根据编号精确查询-->
+    <select id="getUserById" parameterType="user" resultType="user">
+        select * from user where id=#{id}
+    </select>
+    <!--查询用户密码-->
+    <select id="getUserPwd" parameterType="user" resultType="String">
+       select userPwd from user where id=#{id}
+    </select>
+    <!--删除用户-->
+    <delete id="delUser" parameterType="user">
+      DELETE  FROM`blog`.`user` WHERE `id` = #{id}
+    </delete>
+    <!--查询所有的人的总登录数-->
+    <select id="getByVisit" resultType="Integer">
+        SELECT `visit` FROM `user`
+    </select>
+    
+    <!--根据用户名模糊查询用户信息-->
+    <select id="getUserByUserName" resultType="user" parameterType="user">
+    	SELECT * FROM `user` WHERE userName LIKE #{userName}
+    </select>
+</mapper>

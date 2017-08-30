@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.blog.dao.logintime.LoginTimeMapper">
+	<!-- 添加 -->
+	<insert id="addLoginTime" parameterType="loginTime">
+		INSERT INTO
+		`blog`.`logintime` (`userId`,`userName`,`loginTime`) VALUES
+		(#{userId},#{userName},#{loginTime})
+	</insert>
+	
+	<!-- 查询 -->
+	<select id="getLoginTime" resultType="loginTime" parameterType="user">
+		SELECT * FROM `blog`.`logintime` WHERE userId=#{id} order by loginTime desc limit 0, 1
+	</select>
+	
+	<!--查询所有登录的信息-->
+	<select id="count" resultType="int" >
+	  select count(id) from `logintime`
+	</select>
+	<!--分页显示-->
+	<select id="getLoginTimeList" parameterType="loginTime" resultType="loginTime">
+       SELECT * FROM `blog`.`logintime` LIMIT #{startNum},#{pageSize}
+	</select>
+	<!--根据编号精确删除-->
+	 <delete id="delById" parameterType="loginTime">
+	  DELETE FROM `blog`.`logintime` WHERE `id` = #{id}
+	 </delete>
+	 <!--删除所有-->
+	 <delete id="delLoginTime">
+	  DELETE FROM `blog`.`logintime`
+	 </delete>
+	 <!--根据当前登录删除所有信息-->
+	 <delete id="delByUserName" parameterType="loginTime">
+	  DELETE FROM `blog`.`logintime` WHERE `userName` = #{userName}
+	 </delete>
+	 
+	 <!-- 查询个人的登录记录 -->
+	 <select id="getUserLoginTime" parameterType="loginTime" resultType="loginTime">
+	 	SELECT * FROM `blog`.`logintime`
+	 	where userId=#{userId}
+	 	LIMIT 0,4
+	 </select>
+</mapper>

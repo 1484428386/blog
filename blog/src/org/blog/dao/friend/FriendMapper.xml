@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.blog.dao.friend.FriendMapper">
+	<!--添加 -->
+	<insert id="addFriend" parameterType="friend">
+		INSERT INTO `blog`.`friend`
+		(`createId`,`statuc`,`addDateTime`,`addFriend`)VALUES(#{createId},#{statuc},#{addDateTime},#{addFriend});
+	</insert>
+	<!--getBycreateid -->
+	<select id="getBycreateid" parameterType="friend" resultType="int">
+		SELECT COUNT(1) FROM friend WHERE createId=#{createId} and
+		`addFriend`=#{addFriend}
+	</select>
+	<!--查询好友 -->
+	<select id="getFriendList" resultType="user" parameterType="user">
+		SELECT u.*,f.statuc,f.addFriend,f.createId FROM `user` u INNER JOIN
+		friend f ON u.id=f.addFriend
+		WHERE f.createId=#{id} and f.statuc!=3;
+	</select>
+	<!-- 审核好友 -->
+	<select id="getFriendstatuc" resultType="user" parameterType="user">
+		SELECT u.*,f.statuc,f.addFriend,f.createId FROM `user` u INNER JOIN
+		friend f ON u.id=f.createId
+		WHERE f.addFriend=#{id} and f.statuc=3;
+	</select>
+	<!--同意 -->
+	<update id="modifyFriend" parameterType="friend">
+		update `blog`.`friend`
+		<set>
+			`statuc` = #{statuc},`addDateTime`=#{addDateTime}
+		</set>
+		where createId=#{createId} and addFriend=#{addFriend}
+	</update>
+	<!--拒绝好友 -->
+	<delete id="delFriend" parameterType="friend">
+		DELETE FROM `friend` WHERE createId=#{createId} and addFriend=#{addFriend}
+	</delete>
+	<!--删除所有有关userid的列 -->
+	<delete id="delfriendUser" parameterType="friend">
+		DELETE FROM `friend`where 1=1
+		<if test="createId != null">
+			and createId=#{createId}
+		</if>
+		<if test="addFriend != null">
+			and addFriend=#{addFriend}
+		</if>
+
+	</delete>
+</mapper>

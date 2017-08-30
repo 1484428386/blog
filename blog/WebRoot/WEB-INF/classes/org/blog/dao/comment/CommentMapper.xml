@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.blog.dao.comment.CommentMapper">
+<!--查询评论总记录数-->
+ <select id="count" parameterType="user" resultType="int">
+  select count(*) from `comment` where reviewer=#{reviewer}
+ </select>
+ 
+ <insert id="commentArticle" parameterType="comment">
+ 	INSERT INTO `blog`.`comment` (`commentText`,`createDate`,`articleId`,`reviewer`) VALUES (#{commentText},#{createDate},#{articleId},#{reviewer})
+ </insert>
+ 
+ <select id="getCommentListByArticleId" parameterType="comment" resultType="comment">
+ 	select * from comment
+ 	<trim prefix="where" prefixOverrides="and | or">
+ 		<if test="articleId!=null">
+ 			and articleId =#{articleId} 
+ 		</if>
+ 		<if test="reviewer!=null">
+ 			reviewer=#{reviewer}
+ 		</if>
+ 	</trim>
+ 	limit #{startNum},#{pageSize}
+ </select>
+ 
+ <select id="getCommentListByArticleIdCount" parameterType="comment" resultType="int">
+ 	select count(*) from comment where articleId =#{articleId}
+ </select>
+ 
+ <select id="getCommentById" resultType="comment" parameterType="comment">
+ 	select * from comment where id =#{id} 
+ </select>
+ 
+ <delete id="delComment" parameterType="comment">
+ 	DELETE FROM `blog`.`comment` WHERE `id` = #{id};
+ </delete>
+</mapper>

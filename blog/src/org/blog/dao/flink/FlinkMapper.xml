@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.blog.dao.flink.FlinkMapper">
+   <!--查询友链总记录数-->
+   <select id="count" parameterType="user" resultType="int">
+   SELECT COUNT(id) FROM `flink` WHERE createId=#{id}
+   </select>
+   
+   <!--分页显示友链-->
+   <select id="getFlinkList" parameterType="flink" resultType="flink">
+     SELECT * FROM `blog`.`flink` LIMIT #{startNum},#{pageSize}
+   </select>
+   <!--分页获取总记录数-->
+   <select id="getcount" resultType="int">
+     SELECT COUNT(id) FROM `flink`
+   </select>
+   <!--根据编号查询-->
+   <select id="getFlinkByid" resultType="flink" parameterType="flink">
+      SELECT * FROM `blog`.`flink`  WHERE id=#{id}
+   </select>
+    <!--修改-->
+    <update id="modifyFlink" parameterType="flink">
+    UPDATE `blog`.`flink`
+    <set>
+     <if test=" name !=null and name !='' ">
+     `name` = #{name},
+     </if>
+     <if test="url !=null and url !='' ">
+        `url` = #{url},
+     </if>
+     <if test=" describe !=null and describe !='' ">
+       `describe` = #{describe}
+     </if>
+    </set>
+    where id=#{id}
+    </update>
+    <!--添加-->
+    <insert id="addFlink" parameterType="flink">
+    INSERT INTO `blog`.`flink` (`name`,`url`,`describe`,`createId`)VALUES(#{name},#{url}, #{describe},#{createId});
+    </insert>
+    <!--删除-->
+    <delete id="delFlink" parameterType="flink">
+    DELETE FROM `blog`.`flink` WHERE `id` = #{id}
+    </delete>
+</mapper>

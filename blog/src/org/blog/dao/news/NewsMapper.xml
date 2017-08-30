@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.blog.dao.news.NewsMapper">
+   <select id="getNewsList" resultType="news" parameterType="news">
+   SELECT n.*,u.userName FROM `blog`.`news` n INNER JOIN `user` u ON u.`id`=n.`userId` WHERE n.`root`=#{root} ORDER BY n.id
+   </select>
+   <!--添加-->
+   <insert id="addNews" parameterType="news">
+   INSERT INTO `blog`.`news` (`newsText`, `createDate`,`createId`,`userId`,`root`,`rocord` )
+  VALUES(#{newsText},#{createDate},#{createId},#{userId},#{root},#{rocord});
+   </insert>
+   <!--修改-->
+   <update id="modifyNews" parameterType="news">
+       UPDATE `blog`.`news` SET `rocord` = #{rocord} where `id` = #{id};
+   </update>
+   <!--删除-->
+   <delete id="delNews" parameterType="news">
+      DELETE FROM `blog`.`news` WHERE `id` = #{id}
+   </delete>
+   <!--根据编号精确-->
+     <select id="getNewsByRocord" parameterType="news" resultType="String">
+       SELECT rocord FROM news WHERE id=#{id}
+     </select>
+     <!--删除所有有关userid的列-->
+     <delete id="delNewsUser" parameterType="news">
+           DELETE FROM news  where 1=1
+              <if test="createId != null">
+               and createId=#{createId} 
+              </if>
+             <if test="userId != null">
+              and userId=#{userId}
+             </if>
+           
+     </delete>
+     
+</mapper>
